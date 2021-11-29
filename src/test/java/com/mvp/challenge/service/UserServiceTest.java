@@ -50,7 +50,9 @@ class UserServiceTest {
     public void shouldThrowWhenWrongUserCredential() throws UserCredentialException {
         User user = new User();
 
-        userService.save(user);
+        when(userRepository.mergeUser(user)).thenThrow(new UserCredentialException("missing login info"));
+
+        assertThrows(UserCredentialException.class, () -> userService.save(user));
 
         verify(userRepository).mergeUser(user);
     }
@@ -125,5 +127,4 @@ class UserServiceTest {
         assertEquals(user, userService.resetDeposit(userName));
         verify(userRepository).resetDeposit(userName);
     }
-
 }
