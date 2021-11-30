@@ -9,6 +9,7 @@ import com.mvp.challenge.exception.NotEnoughDepositException;
 import com.mvp.challenge.exception.ProductAlreadyExistsException;
 import com.mvp.challenge.exception.ProductNotExistsException;
 import com.mvp.challenge.exception.ProductTemporarilyNotAvailable;
+import com.mvp.challenge.exception.TooManyProductPurchaseException;
 import com.mvp.challenge.exception.UserCredentialException;
 import com.mvp.challenge.exception.UserNotAuthorizedException;
 import com.mvp.challenge.service.ProductService;
@@ -40,14 +41,18 @@ public class ProductController {
     @RequestMapping(method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(code = HttpStatus.CREATED)
     @RolesAllowed({SELLER})
-    public Product addProduct(@RequestBody Product product) throws CoinInputException, ProductAlreadyExistsException {
+    public Product addProduct(@RequestBody Product product, Authentication authentication) throws CoinInputException, ProductAlreadyExistsException, UserNotAuthorizedException {
+        if (!hasUserPrivilegeOnProduct(authentication.getPrincipal(), product.getSellerId())) {
+            throw new UserNotAuthorizedException("User not authorized to create product");
+        }
+
         return productService.add(product);
     }
 
     @RequestMapping(value = "/buy", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(code = HttpStatus.OK)
     @RolesAllowed({BUYER, SELLER})
-    public PurchaseResult buy(@RequestBody List<Purchase> purchaseList, HttpServletRequest httpServletRequest) throws NotEnoughDepositException, ProductTemporarilyNotAvailable, UserCredentialException, ProductNotExistsException {
+    public PurchaseResult buy(@RequestBody List<Purchase> purchaseList, HttpServletRequest httpServletRequest) throws NotEnoughDepositException, ProductTemporarilyNotAvailable, UserCredentialException, ProductNotExistsException, TooManyProductPurchaseException {
         return productService.buy(httpServletRequest.getUserPrincipal().getName(), purchaseList);
     }
 

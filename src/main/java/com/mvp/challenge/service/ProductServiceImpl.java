@@ -9,6 +9,7 @@ import com.mvp.challenge.exception.NotEnoughDepositException;
 import com.mvp.challenge.exception.ProductAlreadyExistsException;
 import com.mvp.challenge.exception.ProductNotExistsException;
 import com.mvp.challenge.exception.ProductTemporarilyNotAvailable;
+import com.mvp.challenge.exception.TooManyProductPurchaseException;
 import com.mvp.challenge.exception.UserCredentialException;
 import com.mvp.challenge.repository.ProductRepository;
 import com.mvp.challenge.repository.UserRepository;
@@ -27,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product add(Product product) throws ProductAlreadyExistsException, CoinInputException {
-       return productRepository.add(product);
+        return productRepository.add(product);
     }
 
     @Override
@@ -56,7 +57,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public PurchaseResult buy(String userName, List<Purchase> purchaseInput) throws ProductNotExistsException, NotEnoughDepositException, ProductTemporarilyNotAvailable, UserCredentialException {
+    public PurchaseResult buy(String userName, List<Purchase> purchaseInput) throws ProductNotExistsException, NotEnoughDepositException, ProductTemporarilyNotAvailable, UserCredentialException, TooManyProductPurchaseException {
 
         int total = 0;
         for (Purchase purchase : purchaseInput) {
@@ -74,9 +75,9 @@ public class ProductServiceImpl implements ProductService {
         for (Purchase purchase : purchaseInput) {
             productRepository.buy(purchase);
             purchaseResult.getProductList().add(purchase.getProductId());
-            purchaseResult.setTotal(purchaseResult.getTotal() + (purchase.getAmount() * productRepository.getByProduct(purchase.getProductId()).getCost()));
         }
 
+        purchaseResult.setTotal(total);
         purchaseResult.setChange(MvpUtil.getChangeMap(user.getDeposit() - total));
 
         user.setDeposit(user.getDeposit() - total);

@@ -6,6 +6,7 @@ import com.mvp.challenge.exception.CoinInputException;
 import com.mvp.challenge.exception.ProductAlreadyExistsException;
 import com.mvp.challenge.exception.ProductNotExistsException;
 import com.mvp.challenge.exception.ProductTemporarilyNotAvailable;
+import com.mvp.challenge.exception.TooManyProductPurchaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -51,18 +52,22 @@ public class ProductRepository {
         return productMap.remove(product.getProductName());
     }
 
-    public Product updateProduct(Product product) throws ProductNotExistsException {
+    public Product updateProduct(Product product) {
         update(product);
         return product;
     }
 
-    public void buy(Purchase purchaseInput) throws ProductNotExistsException, ProductTemporarilyNotAvailable {
-        Product product = getByProduct(purchaseInput.getProductId());
+    public void buy(Purchase purchase) throws ProductNotExistsException, ProductTemporarilyNotAvailable, TooManyProductPurchaseException {
+        Product product = getByProduct(purchase.getProductId());
 
         if (product.getAmountAvailable() <= 0)
             throw new ProductTemporarilyNotAvailable(product.getProductName());
 
-        product.setAmountAvailable(product.getAmountAvailable() - purchaseInput.getAmount());
+        if (purchase.getAmount() > product.getAmountAvailable()) {
+            throw new TooManyProductPurchaseException(product.getProductName() + " has only " + product.getAmountAvailable() + " items available");
+        }
+
+        product.setAmountAvailable(product.getAmountAvailable() - purchase.getAmount());
         update(product);
     }
 

@@ -9,6 +9,7 @@ import com.mvp.challenge.exception.NotEnoughDepositException;
 import com.mvp.challenge.exception.ProductAlreadyExistsException;
 import com.mvp.challenge.exception.ProductNotExistsException;
 import com.mvp.challenge.exception.ProductTemporarilyNotAvailable;
+import com.mvp.challenge.exception.TooManyProductPurchaseException;
 import com.mvp.challenge.exception.UserCredentialException;
 import com.mvp.challenge.repository.ProductRepository;
 import com.mvp.challenge.repository.UserRepository;
@@ -66,7 +67,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    public void shouldBuyProduct() throws NotEnoughDepositException, ProductTemporarilyNotAvailable, UserCredentialException, ProductNotExistsException {
+    public void shouldBuyProduct() throws NotEnoughDepositException, ProductTemporarilyNotAvailable, UserCredentialException, ProductNotExistsException, TooManyProductPurchaseException {
 
         when(productRepository.getByProduct(product.getProductName())).thenReturn(product);
         String userName = "userName";
@@ -91,6 +92,17 @@ public class ProductServiceTest {
         when(userRepository.get(userName)).thenReturn(User.builder().deposit(productCost * (purchaseAmount - 1)).build());
 
         assertThrows(NotEnoughDepositException.class, () -> productService.buy(userName, List.of(Purchase.builder().productId(product.getProductName()).amount(purchaseAmount).build())));
+    }
+
+    @Test
+    public void shouldBNotBuyProductNotItemsAvailable() throws ProductNotExistsException {
+
+        when(productRepository.getByProduct(product.getProductName())).thenReturn(product);
+        String userName = "userName";
+
+        when(userRepository.get(userName)).thenReturn(User.builder().deposit(productCost * productAvailability).build());
+
+        assertThrows(NotEnoughDepositException.class, () -> productService.buy(userName, List.of(Purchase.builder().productId(product.getProductName()).amount(productAvailability + 1).build())));
     }
 
     @Test

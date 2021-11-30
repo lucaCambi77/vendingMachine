@@ -3,11 +3,10 @@ package com.mvp.challenge.repository;
 import com.mvp.challenge.domain.Product;
 import com.mvp.challenge.domain.Purchase;
 import com.mvp.challenge.exception.CoinInputException;
-import com.mvp.challenge.exception.NotEnoughDepositException;
 import com.mvp.challenge.exception.ProductAlreadyExistsException;
 import com.mvp.challenge.exception.ProductNotExistsException;
 import com.mvp.challenge.exception.ProductTemporarilyNotAvailable;
-import com.mvp.challenge.exception.UserCredentialException;
+import com.mvp.challenge.exception.TooManyProductPurchaseException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -121,7 +120,7 @@ class ProductRepositoryTest {
     }
 
     @Test
-    public void shouldBuyProduct() throws CoinInputException, ProductAlreadyExistsException, NotEnoughDepositException, ProductTemporarilyNotAvailable, ProductNotExistsException, UserCredentialException {
+    public void shouldBuyProduct() throws CoinInputException, ProductAlreadyExistsException, ProductTemporarilyNotAvailable, ProductNotExistsException, TooManyProductPurchaseException {
         int available = 5;
         int purchase = 1;
 
