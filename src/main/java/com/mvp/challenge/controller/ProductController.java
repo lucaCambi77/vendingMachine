@@ -67,7 +67,7 @@ public class ProductController {
         return productService.updateProduct(product);
     }
 
-    @RequestMapping(value = "/reset", method = RequestMethod.DELETE, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(code = HttpStatus.OK)
     @RolesAllowed({SELLER})
     public Product delete(@RequestBody Product product, Authentication authentication) throws UserNotAuthorizedException {

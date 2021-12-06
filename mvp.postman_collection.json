@@ -76,6 +76,44 @@
 			"response": []
 		},
 		{
+			"name": "create seller 2",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\" : \"seller2\",\n    \"password\" : \"password\",\n    \"userRoles\" : [ {\"role\" : {\"name\" : \"ROLE_SELLER\" , \"privileges\" : [{\"privilege\" : \"2000\"}]}}]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/mvp/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"mvp",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "buyer deposit",
 			"protocolProfileBehavior": {
 				"disabledSystemHeaders": {
@@ -274,6 +312,52 @@
 			"response": []
 		},
 		{
+			"name": "delete product unauth",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "seller2",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "password",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"productName\" : \"productA\",\n    \"sellerId\" : 1000\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/mvp/product/delete",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"mvp",
+						"product",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "reset user deposit",
 			"request": {
 				"auth": {
@@ -299,6 +383,10 @@
 						"type": "text"
 					}
 				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "http://localhost:8080/mvp/user/reset",
 					"protocol": "http",
@@ -343,7 +431,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "[{\n    \"productId\" : \"productA\",\n    \"amount\" : 1\n}\n]"
+					"raw": "[\n    {\n    \"productId\" : \"productA\",\n    \"amount\" : 1\n    }\n]"
 				},
 				"url": {
 					"raw": "http://localhost:8080/mvp/product/buy",

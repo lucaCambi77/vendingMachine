@@ -38,11 +38,11 @@ public class MvpControllerAdvice {
     }
 
     @ExceptionHandler({UserNotAuthorizedException.class})
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     public
     @ResponseBody
     ResponseEntity<ErrorResponse> unauthorizedRequestResponse(Exception ex) {
-        HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
+        HttpStatus httpStatus = HttpStatus.FORBIDDEN;
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .error(httpStatus.getReasonPhrase())
