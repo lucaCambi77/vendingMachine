@@ -3,7 +3,10 @@ package com.mvp.challenge.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mvp.challenge.MvpApplication;
 import com.mvp.challenge.domain.Deposit;
+import com.mvp.challenge.domain.MvpRoles;
+import com.mvp.challenge.domain.user.Role;
 import com.mvp.challenge.domain.user.User;
+import com.mvp.challenge.domain.user.UserRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.Set;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
@@ -48,6 +53,7 @@ public class ControllerTest {
         User user = new User();
         user.setUserName("user");
         user.setPassword("password");
+        user.setUserRoles(Set.of(UserRole.builder().role(Role.builder().name(MvpRoles.Code.BUYER).build()).build()));
 
         mockMvc.perform(post("/user/")
                         .contentType(mediaType)

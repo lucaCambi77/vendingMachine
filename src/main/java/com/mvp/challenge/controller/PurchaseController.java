@@ -1,5 +1,6 @@
 package com.mvp.challenge.controller;
 
+import com.mvp.challenge.domain.MvpRoles;
 import com.mvp.challenge.domain.Purchase;
 import com.mvp.challenge.domain.PurchaseResult;
 import com.mvp.challenge.exception.NotEnoughDepositException;
@@ -21,9 +22,6 @@ import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import static com.mvp.challenge.domain.MvpRoles.BUYER;
-import static com.mvp.challenge.domain.MvpRoles.SELLER;
-
 @RestController()
 @RequestMapping("/buy")
 @RequiredArgsConstructor
@@ -33,7 +31,7 @@ public class PurchaseController {
 
     @RequestMapping(method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(code = HttpStatus.OK)
-    @RolesAllowed({BUYER, SELLER})
+    @RolesAllowed({MvpRoles.Code.BUYER, MvpRoles.Code.SELLER})
     public PurchaseResult buy(@RequestBody List<Purchase> purchaseList, HttpServletRequest httpServletRequest) throws NotEnoughDepositException, ProductTemporarilyNotAvailable, UserCredentialException, ProductNotExistsException, TooManyProductPurchaseException {
         return purchaseService.buy(httpServletRequest.getUserPrincipal().getName(), purchaseList);
     }

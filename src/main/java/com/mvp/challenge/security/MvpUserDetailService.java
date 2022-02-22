@@ -31,9 +31,7 @@ public class MvpUserDetailService implements UserDetailsService {
 
         user.getUserRoles().forEach(role -> {
             grantedAuthorities.add(new SimpleGrantedAuthority(role.getRole().getName()));
-            role.getRole().getPrivileges().forEach(p -> {
-                        grantedAuthorities.add(new SimpleGrantedAuthority(p.getPrivilege()));
-                    }
+            role.getRole().getPrivileges().forEach(p -> grantedAuthorities.add(new SimpleGrantedAuthority(p.getPrivilege()))
             );
         });
 

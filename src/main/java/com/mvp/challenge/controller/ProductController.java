@@ -1,6 +1,7 @@
 package com.mvp.challenge.controller;
 
 
+import com.mvp.challenge.domain.MvpRoles;
 import com.mvp.challenge.domain.Product;
 import com.mvp.challenge.exception.CoinInputException;
 import com.mvp.challenge.exception.ProductAlreadyExistsException;
@@ -20,8 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.security.RolesAllowed;
 
-import static com.mvp.challenge.domain.MvpRoles.SELLER;
-
 @RestController()
 @RequestMapping("/product")
 @RequiredArgsConstructor
@@ -31,7 +30,7 @@ public class ProductController {
 
     @RequestMapping(method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(code = HttpStatus.CREATED)
-    @RolesAllowed({SELLER})
+    @RolesAllowed({MvpRoles.Code.SELLER})
     public Product addProduct(@RequestBody Product product, Authentication authentication) throws CoinInputException, ProductAlreadyExistsException, UserNotAuthorizedException {
         if (!hasUserPrivilegeOnProduct(authentication.getPrincipal(), product.getSellerId())) {
             throw new UserNotAuthorizedException("User not authorized to create product");
@@ -42,7 +41,7 @@ public class ProductController {
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(code = HttpStatus.OK)
-    @RolesAllowed({SELLER})
+    @RolesAllowed({MvpRoles.Code.SELLER})
     public Product update(@RequestBody Product product, Authentication authentication) throws ProductNotExistsException, UserNotAuthorizedException {
         if (!hasUserPrivilegeOnProduct(authentication.getPrincipal(), product.getSellerId())) {
             throw new UserNotAuthorizedException("User not authorized to update product");
@@ -53,7 +52,7 @@ public class ProductController {
 
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(code = HttpStatus.OK)
-    @RolesAllowed({SELLER})
+    @RolesAllowed({MvpRoles.Code.SELLER})
     public Product delete(@RequestBody Product product, Authentication authentication) throws UserNotAuthorizedException {
         if (!hasUserPrivilegeOnProduct(authentication.getPrincipal(), product.getSellerId())) {
             throw new UserNotAuthorizedException("User not authorized to delete product");

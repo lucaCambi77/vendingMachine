@@ -5,26 +5,23 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
 import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class User implements java.io.Serializable, UserDetails {
     private String userName;
     private String password;
     private int deposit;
     private Set<UserRole> userRoles;
-
     private boolean active;
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Set<UserRole> getAuthorities() {
         return this.userRoles;
     }
 
