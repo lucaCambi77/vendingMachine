@@ -434,7 +434,7 @@
 					"raw": "[\n    {\n    \"productId\" : \"productA\",\n    \"amount\" : 1\n    }\n]"
 				},
 				"url": {
-					"raw": "http://localhost:8080/mvp/product/buy",
+					"raw": "http://localhost:8080/mvp/buy",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -442,7 +442,6 @@
 					"port": "8080",
 					"path": [
 						"mvp",
-						"product",
 						"buy"
 					]
 				}
