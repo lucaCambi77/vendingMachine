@@ -1,31 +1,21 @@
 package com.mvp.challenge.service;
 
 import com.mvp.challenge.domain.Product;
-import com.mvp.challenge.domain.Purchase;
-import com.mvp.challenge.domain.PurchaseResult;
-import com.mvp.challenge.domain.user.User;
 import com.mvp.challenge.exception.CoinInputException;
-import com.mvp.challenge.exception.NotEnoughDepositException;
 import com.mvp.challenge.exception.ProductAlreadyExistsException;
 import com.mvp.challenge.exception.ProductNotExistsException;
-import com.mvp.challenge.exception.ProductTemporarilyNotAvailable;
-import com.mvp.challenge.exception.TooManyProductPurchaseException;
-import com.mvp.challenge.exception.UserCredentialException;
 import com.mvp.challenge.repository.ProductRepository;
 import com.mvp.challenge.repository.UserRepository;
+import com.mvp.challenge.service.impl.ProductServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceTest {
@@ -64,45 +54,6 @@ public class ProductServiceTest {
         assertThrows(ProductAlreadyExistsException.class, () -> productService.add(product));
 
         verify(productRepository).add(product);
-    }
-
-    @Test
-    public void shouldBuyProduct() throws NotEnoughDepositException, ProductTemporarilyNotAvailable, UserCredentialException, ProductNotExistsException, TooManyProductPurchaseException {
-
-        when(productRepository.getByProduct(product.getProductName())).thenReturn(product);
-        String userName = "userName";
-
-        int purchaseAmount = 1;
-
-        when(userRepository.get(userName)).thenReturn(User.builder().deposit(productCost * purchaseAmount).build());
-
-        PurchaseResult purchaseResult = productService.buy(userName, List.of(Purchase.builder().productId(product.getProductName()).amount(purchaseAmount).build()));
-
-        assertEquals(product.getCost() * purchaseAmount, purchaseResult.getTotal());
-    }
-
-    @Test
-    public void shouldBNotBuyProductNotEnoughMoney() throws ProductNotExistsException {
-
-        when(productRepository.getByProduct(product.getProductName())).thenReturn(product);
-        String userName = "userName";
-
-        int purchaseAmount = 2;
-
-        when(userRepository.get(userName)).thenReturn(User.builder().deposit(productCost * (purchaseAmount - 1)).build());
-
-        assertThrows(NotEnoughDepositException.class, () -> productService.buy(userName, List.of(Purchase.builder().productId(product.getProductName()).amount(purchaseAmount).build())));
-    }
-
-    @Test
-    public void shouldBNotBuyProductNotItemsAvailable() throws ProductNotExistsException {
-
-        when(productRepository.getByProduct(product.getProductName())).thenReturn(product);
-        String userName = "userName";
-
-        when(userRepository.get(userName)).thenReturn(User.builder().deposit(productCost * productAvailability).build());
-
-        assertThrows(NotEnoughDepositException.class, () -> productService.buy(userName, List.of(Purchase.builder().productId(product.getProductName()).amount(productAvailability + 1).build())));
     }
 
     @Test

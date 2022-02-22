@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.mvp.challenge.service;
+package com.mvp.challenge.service.impl;
 
 import com.mvp.challenge.domain.AcceptedCoins;
 import com.mvp.challenge.domain.Deposit;
@@ -9,6 +9,7 @@ import com.mvp.challenge.domain.user.User;
 import com.mvp.challenge.exception.CoinInputException;
 import com.mvp.challenge.exception.UserCredentialException;
 import com.mvp.challenge.repository.UserRepository;
+import com.mvp.challenge.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

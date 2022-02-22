@@ -6,6 +6,7 @@ import com.mvp.challenge.domain.user.User;
 import com.mvp.challenge.exception.CoinInputException;
 import com.mvp.challenge.exception.UserCredentialException;
 import com.mvp.challenge.repository.UserRepository;
+import com.mvp.challenge.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

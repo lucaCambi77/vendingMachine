@@ -9,7 +9,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -20,7 +19,7 @@ public class User implements java.io.Serializable, UserDetails {
     private String userName;
     private String password;
     private int deposit;
-    private Set<UserRole> userRoles = new HashSet<>(0);
+    private Set<UserRole> userRoles;
 
     private boolean active;
 
