@@ -17,7 +17,6 @@ public class MvpUtil {
         if (change == 0)
             return new HashMap<>();
 
-
         Map<AcceptedCoins, Integer> changeMap = new HashMap<>();
 
         for (Integer value : list) {
