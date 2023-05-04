@@ -20,54 +20,68 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceTest {
 
-    @Mock
-    private ProductRepository productRepository;
+  @Mock private ProductRepository productRepository;
 
-    @Mock
-    private UserRepository userRepository;
+  @Mock private UserRepository userRepository;
 
-    private ProductService productService;
+  private ProductService productService;
 
-    private final String PRDDUCT_NAME = "product";
+  private final String PRODUCT_NAME = "product";
 
-    private final int productCost = 5;
-    private final int productAvailability = 10;
+  private final int productCost = 5;
 
-    private final Product product = Product.builder().productName(PRDDUCT_NAME).cost(productCost).amountAvailable(productAvailability).sellerId(1).build();
+  private final int productAvailability = 10;
 
-    @BeforeEach
-    public void setUp() {
-        productService = new ProductServiceImpl(productRepository, userRepository);
-    }
+  private final Product product =
+      Product.builder()
+          .productName(PRODUCT_NAME)
+          .cost(productCost)
+          .amountAvailable(productAvailability)
+          .sellerId(1)
+          .build();
 
-    @Test
-    public void shouldAddProduct() throws CoinInputException, ProductAlreadyExistsException {
-        productService.add(product);
+  @BeforeEach
+  public void setUp() {
+    productService = new ProductServiceImpl(productRepository, userRepository);
+  }
 
-        verify(productRepository).add(product);
-    }
+  @Test
+  public void shouldAddProduct() throws CoinInputException, ProductAlreadyExistsException {
+    productService.add(product);
 
-    @Test
-    public void shouldNotAddProductAlreadyExists() throws CoinInputException, ProductAlreadyExistsException {
-        doThrow(new ProductAlreadyExistsException(product.getProductName())).when(productRepository).add(product);
+    verify(productRepository).add(product);
+  }
 
-        assertThrows(ProductAlreadyExistsException.class, () -> productService.add(product));
+  @Test
+  public void shouldNotAddProductAlreadyExists()
+      throws CoinInputException, ProductAlreadyExistsException {
+    doThrow(new ProductAlreadyExistsException(product.getProductName()))
+        .when(productRepository)
+        .add(product);
 
-        verify(productRepository).add(product);
-    }
+    assertThrows(ProductAlreadyExistsException.class, () -> productService.add(product));
 
-    @Test
-    public void shouldDeleteProduct() {
-        productService.delete(product);
-        verify(productRepository).delete(product);
-    }
+    verify(productRepository).add(product);
+  }
 
-    @Test
-    public void shouldUpdateProduct() throws ProductNotExistsException {
-        Product productUpdate = Product.builder().productName(PRDDUCT_NAME).cost(productCost + 1).amountAvailable(productAvailability).sellerId(1).build();
+  @Test
+  public void shouldDeleteProduct() {
+    productService.delete(product);
+    verify(productRepository).delete(product);
+  }
 
-        productService.updateProduct(productUpdate);
+  @Test
+  public void shouldUpdateProduct() throws ProductNotExistsException {
+    Product productUpdate =
+        Product.builder()
+            .productName(PRODUCT_NAME)
+            .cost(productCost + 1)
+            .amountAvailable(productAvailability)
+            .sellerId(1)
+            .build();
 
-        verify(productRepository).updateProduct(productUpdate);
-    }
+    productService.updateProduct(productUpdate);
+
+    verify(productRepository).updateProduct(productUpdate);
+  }
 }

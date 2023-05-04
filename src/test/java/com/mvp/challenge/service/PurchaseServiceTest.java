@@ -27,62 +27,96 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class PurchaseServiceTest {
 
-    @Mock
-    private ProductRepository productRepository;
+  @Mock private ProductRepository productRepository;
 
-    @Mock
-    private UserRepository userRepository;
+  @Mock private UserRepository userRepository;
 
-    private PurchaseService purchaseService;
+  private PurchaseService purchaseService;
 
-    private final String PRODUCT_NAME = "product";
+  private final String PRODUCT_NAME = "product";
 
-    private final int productCost = 5;
-    private final int productAvailability = 10;
+  private final int productCost = 5;
+  private final int productAvailability = 10;
 
-    private final Product product = Product.builder().productName(PRODUCT_NAME).cost(productCost).amountAvailable(productAvailability).sellerId(1).build();
+  private final Product product =
+      Product.builder()
+          .productName(PRODUCT_NAME)
+          .cost(productCost)
+          .amountAvailable(productAvailability)
+          .sellerId(1)
+          .build();
 
-    @BeforeEach
-    public void setUp() {
-        purchaseService = new PurchaseServiceImpl(productRepository, userRepository);
-    }
+  @BeforeEach
+  public void setUp() {
+    purchaseService = new PurchaseServiceImpl(productRepository, userRepository);
+  }
 
-    @Test
-    public void shouldBuyProduct() throws NotEnoughDepositException, ProductTemporarilyNotAvailable, UserCredentialException, ProductNotExistsException, TooManyProductPurchaseException {
+  @Test
+  public void shouldBuyProduct()
+      throws NotEnoughDepositException, ProductTemporarilyNotAvailable, UserCredentialException,
+          ProductNotExistsException, TooManyProductPurchaseException {
 
-        when(productRepository.getByProduct(product.getProductName())).thenReturn(product);
-        String userName = "userName";
+    when(productRepository.getByProduct(product.getProductName())).thenReturn(product);
+    String userName = "userName";
 
-        int purchaseAmount = 1;
+    int purchaseAmount = 1;
 
-        when(userRepository.get(userName)).thenReturn(User.builder().deposit(productCost * purchaseAmount).build());
+    when(userRepository.get(userName))
+        .thenReturn(User.builder().deposit(productCost * purchaseAmount).build());
 
-        PurchaseResult purchaseResult = purchaseService.buy(userName, List.of(Purchase.builder().productId(product.getProductName()).amount(purchaseAmount).build()));
+    PurchaseResult purchaseResult =
+        purchaseService.buy(
+            userName,
+            List.of(
+                Purchase.builder()
+                    .productId(product.getProductName())
+                    .amount(purchaseAmount)
+                    .build()));
 
-        assertEquals(product.getCost() * purchaseAmount, purchaseResult.getTotal());
-    }
+    assertEquals(product.getCost() * purchaseAmount, purchaseResult.getTotal());
+  }
 
-    @Test
-    public void shouldBNotBuyProductNotEnoughMoney() throws ProductNotExistsException {
+  @Test
+  public void shouldBNotBuyProductNotEnoughMoney() throws ProductNotExistsException {
 
-        when(productRepository.getByProduct(product.getProductName())).thenReturn(product);
-        String userName = "userName";
+    when(productRepository.getByProduct(product.getProductName())).thenReturn(product);
+    String userName = "userName";
 
-        int purchaseAmount = 2;
+    int purchaseAmount = 2;
 
-        when(userRepository.get(userName)).thenReturn(User.builder().deposit(productCost * (purchaseAmount - 1)).build());
+    when(userRepository.get(userName))
+        .thenReturn(User.builder().deposit(productCost * (purchaseAmount - 1)).build());
 
-        assertThrows(NotEnoughDepositException.class, () -> purchaseService.buy(userName, List.of(Purchase.builder().productId(product.getProductName()).amount(purchaseAmount).build())));
-    }
+    assertThrows(
+        NotEnoughDepositException.class,
+        () ->
+            purchaseService.buy(
+                userName,
+                List.of(
+                    Purchase.builder()
+                        .productId(product.getProductName())
+                        .amount(purchaseAmount)
+                        .build())));
+  }
 
-    @Test
-    public void shouldBNotBuyProductNotItemsAvailable() throws ProductNotExistsException {
+  @Test
+  public void shouldBNotBuyProductNotItemsAvailable() throws ProductNotExistsException {
 
-        when(productRepository.getByProduct(product.getProductName())).thenReturn(product);
-        String userName = "userName";
+    when(productRepository.getByProduct(product.getProductName())).thenReturn(product);
+    String userName = "userName";
 
-        when(userRepository.get(userName)).thenReturn(User.builder().deposit(productCost * productAvailability).build());
+    when(userRepository.get(userName))
+        .thenReturn(User.builder().deposit(productCost * productAvailability).build());
 
-        assertThrows(NotEnoughDepositException.class, () -> purchaseService.buy(userName, List.of(Purchase.builder().productId(product.getProductName()).amount(productAvailability + 1).build())));
-    }
+    assertThrows(
+        NotEnoughDepositException.class,
+        () ->
+            purchaseService.buy(
+                userName,
+                List.of(
+                    Purchase.builder()
+                        .productId(product.getProductName())
+                        .amount(productAvailability + 1)
+                        .build())));
+  }
 }

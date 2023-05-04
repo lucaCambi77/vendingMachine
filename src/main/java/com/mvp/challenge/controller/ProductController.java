@@ -32,7 +32,7 @@ public class ProductController {
     @ResponseStatus(code = HttpStatus.CREATED)
     @RolesAllowed({MvpRoles.Code.SELLER})
     public Product addProduct(@RequestBody Product product, Authentication authentication) throws CoinInputException, ProductAlreadyExistsException, UserNotAuthorizedException {
-        if (!hasUserPrivilegeOnProduct(authentication.getPrincipal(), product.getSellerId())) {
+        if (hasUserPrivilegeOnProduct(authentication.getPrincipal(), product.getSellerId())) {
             throw new UserNotAuthorizedException("User not authorized to create product");
         }
 
@@ -43,7 +43,7 @@ public class ProductController {
     @ResponseStatus(code = HttpStatus.OK)
     @RolesAllowed({MvpRoles.Code.SELLER})
     public Product update(@RequestBody Product product, Authentication authentication) throws ProductNotExistsException, UserNotAuthorizedException {
-        if (!hasUserPrivilegeOnProduct(authentication.getPrincipal(), product.getSellerId())) {
+        if (hasUserPrivilegeOnProduct(authentication.getPrincipal(), product.getSellerId())) {
             throw new UserNotAuthorizedException("User not authorized to update product");
         }
 
@@ -54,7 +54,7 @@ public class ProductController {
     @ResponseStatus(code = HttpStatus.OK)
     @RolesAllowed({MvpRoles.Code.SELLER})
     public Product delete(@RequestBody Product product, Authentication authentication) throws UserNotAuthorizedException {
-        if (!hasUserPrivilegeOnProduct(authentication.getPrincipal(), product.getSellerId())) {
+        if (hasUserPrivilegeOnProduct(authentication.getPrincipal(), product.getSellerId())) {
             throw new UserNotAuthorizedException("User not authorized to delete product");
         }
 
@@ -63,6 +63,6 @@ public class ProductController {
 
     private boolean hasUserPrivilegeOnProduct(Object user, int product) {
         UserDetails userdetails = (UserDetails) user;
-        return userdetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(Integer.toString(product)));
+        return userdetails.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals(Integer.toString(product)));
     }
 }

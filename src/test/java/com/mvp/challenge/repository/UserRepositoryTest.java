@@ -20,79 +20,82 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(MockitoExtension.class)
 class UserRepositoryTest {
 
-    @InjectMocks
-    private UserRepository userRepository;
+  @InjectMocks private UserRepository userRepository;
 
-    private static final String USER_NAME = "user";
+  private static final String USER_NAME = "user";
 
-    @Test
-    public void shouldAddUser() throws UserCredentialException {
-        User user = createUser();
-        userRepository.mergeUser(user);
-    }
+  @Test
+  public void shouldAddUser() throws UserCredentialException {
+    User user = createUser();
+    userRepository.mergeUser(user);
+  }
 
-    @Test
-    public void shouldNotAddUser() {
-        User user = new User();
-        user.setUserName("newUser");
+  @Test
+  public void shouldNotAddUser() {
+    User user = new User();
+    user.setUserName("newUser");
 
-        assertThrows(UserCredentialException.class, () -> userRepository.mergeUser(user));
+    assertThrows(UserCredentialException.class, () -> userRepository.mergeUser(user));
 
-        user.setUserName(null);
-        user.setPassword("password");
+    user.setUserName(null);
+    user.setPassword("password");
 
-        assertThrows(UserCredentialException.class, () -> userRepository.mergeUser(user));
+    assertThrows(UserCredentialException.class, () -> userRepository.mergeUser(user));
+  }
 
-    }
+  @Test
+  public void shouldNotAddUserMissingRoles() {
+    final User user = createUser().toBuilder().userRoles(null).build();
 
-    @Test
-    public void shouldNotAddUserMissingRoles() {
-        final User user = createUser().toBuilder().userRoles(null).build();
+    assertThrows(UserCredentialException.class, () -> userRepository.mergeUser(user));
 
-        assertThrows(UserCredentialException.class, () -> userRepository.mergeUser(user));
+    final User user1 =
+        createUser().toBuilder()
+            .userRoles(
+                Set.of(UserRole.builder().role(Role.builder().name("roleFake").build()).build()))
+            .build();
 
-        final User user1 = createUser().toBuilder().userRoles(Set.of(UserRole.builder().role(Role.builder().name("roleFake").build()).build())).build();
+    assertThrows(UserCredentialException.class, () -> userRepository.mergeUser(user1));
+  }
 
-        assertThrows(UserCredentialException.class, () -> userRepository.mergeUser(user1));
-    }
+  @Test
+  void shouldDepositCoins() throws CoinInputException, UserCredentialException {
+    User user = createUser();
+    userRepository.mergeUser(user);
 
-    @Test
-    void shouldDepositCoins() throws CoinInputException, UserCredentialException {
-        User user = createUser();
-        userRepository.mergeUser(user);
+    assertEquals(0, userRepository.get(USER_NAME).getDeposit());
 
-        assertEquals(0, userRepository.get(USER_NAME).getDeposit());
+    userRepository.deposit(USER_NAME, AcceptedCoins.TEN);
 
-        userRepository.deposit(USER_NAME, AcceptedCoins.TEN);
+    assertEquals(AcceptedCoins.TEN.getValue(), userRepository.get(USER_NAME).getDeposit());
+  }
 
-        assertEquals(AcceptedCoins.TEN.getValue(), userRepository.get(USER_NAME).getDeposit());
-    }
+  @Test
+  void shouldNotDepositCoins() {
+    assertThrows(CoinInputException.class, () -> userRepository.deposit(USER_NAME, null));
+  }
 
-    @Test
-    void shouldNotDepositCoins() {
-        assertThrows(CoinInputException.class, () -> userRepository.deposit(USER_NAME, null));
-    }
+  @Test
+  public void shouldResetDeposit() throws CoinInputException, UserCredentialException {
+    User user = createUser();
+    userRepository.mergeUser(user);
 
-    @Test
-    public void shouldResetDeposit() throws CoinInputException, UserCredentialException {
-        User user = createUser();
-        userRepository.mergeUser(user);
+    userRepository.deposit(USER_NAME, AcceptedCoins.TEN);
 
-        userRepository.deposit(USER_NAME, AcceptedCoins.TEN);
+    assertEquals(AcceptedCoins.TEN.getValue(), userRepository.get(USER_NAME).getDeposit());
 
-        assertEquals(AcceptedCoins.TEN.getValue(), userRepository.get(USER_NAME).getDeposit());
+    userRepository.resetDeposit(USER_NAME);
 
-        userRepository.resetDeposit(USER_NAME);
+    assertEquals(0, userRepository.get(USER_NAME).getDeposit());
+  }
 
-        assertEquals(0, userRepository.get(USER_NAME).getDeposit());
-    }
-
-    private User createUser() {
-        return User.builder()
-                .userName(USER_NAME)
-                .password("password")
-                .userRoles(Set.of(UserRole.builder().role(Role.builder().name(MvpRoles.Code.BUYER).build()).build()))
-                .build();
-    }
-
+  private User createUser() {
+    return User.builder()
+        .userName(USER_NAME)
+        .password("password")
+        .userRoles(
+            Set.of(
+                UserRole.builder().role(Role.builder().name(MvpRoles.Code.BUYER).build()).build()))
+        .build();
+  }
 }

@@ -23,109 +23,110 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-    private UserService userService;
+  private UserService userService;
 
-    @Mock
-    private UserRepository userRepository;
+  @Mock private UserRepository userRepository;
 
-    @Mock
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+  @Mock private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @BeforeEach
-    public void setUp() {
-        userService = new UserServiceImpl(userRepository, bCryptPasswordEncoder);
-    }
+  @BeforeEach
+  public void setUp() {
+    userService = new UserServiceImpl(userRepository, bCryptPasswordEncoder);
+  }
 
-    @Test
-    public void shouldAddUser() throws UserCredentialException {
-        User user = new User();
-        user.setUserName("User");
-        user.setPassword("password");
+  @Test
+  public void shouldAddUser() throws UserCredentialException {
+    User user = new User();
+    user.setUserName("User");
+    user.setPassword("password");
 
-        userService.save(user);
+    userService.save(user);
 
-        verify(userRepository).mergeUser(user);
-    }
+    verify(userRepository).mergeUser(user);
+  }
 
-    @Test
-    public void shouldThrowWhenWrongUserCredential() throws UserCredentialException {
-        User user = new User();
+  @Test
+  public void shouldThrowWhenWrongUserCredential() throws UserCredentialException {
+    User user = new User();
 
-        when(userRepository.mergeUser(user)).thenThrow(new UserCredentialException("missing login info"));
+    when(userRepository.mergeUser(user))
+        .thenThrow(new UserCredentialException("missing login info"));
 
-        assertThrows(UserCredentialException.class, () -> userService.save(user));
+    assertThrows(UserCredentialException.class, () -> userService.save(user));
 
-        verify(userRepository).mergeUser(user);
-    }
+    verify(userRepository).mergeUser(user);
+  }
 
-    @Test
-    public void shouldGetUser() throws UsernameNotFoundException {
-        String userName = "userName";
+  @Test
+  public void shouldGetUser() throws UsernameNotFoundException {
+    String userName = "userName";
 
-        User user = new User();
-        user.setUserName(userName);
-        user.setPassword("password");
+    User user = new User();
+    user.setUserName(userName);
+    user.setPassword("password");
 
-        when(userRepository.get(userName)).thenReturn(user);
+    when(userRepository.get(userName)).thenReturn(user);
 
-        assertEquals(user, userService.findByUsername(userName));
+    assertEquals(user, userService.findByUsername(userName));
 
-        verify(userRepository).get(userName);
-    }
+    verify(userRepository).get(userName);
+  }
 
-    @Test
-    public void shouldThrowWhenUserNotFound() {
-        String userName = "userName";
+  @Test
+  public void shouldThrowWhenUserNotFound() {
+    String userName = "userName";
 
-        when(userRepository.get(userName)).thenThrow(new UsernameNotFoundException("user not found"));
+    when(userRepository.get(userName)).thenThrow(new UsernameNotFoundException("user not found"));
 
-        assertThrows(UsernameNotFoundException.class, () -> userService.findByUsername(userName));
+    assertThrows(UsernameNotFoundException.class, () -> userService.findByUsername(userName));
 
-        verify(userRepository).get(userName);
-    }
+    verify(userRepository).get(userName);
+  }
 
-    @Test
-    public void shouldDeposit() throws CoinInputException {
-        String userName = "userName";
-        AcceptedCoins deposit = AcceptedCoins.FIVE;
+  @Test
+  public void shouldDeposit() throws CoinInputException {
+    String userName = "userName";
+    AcceptedCoins deposit = AcceptedCoins.FIVE;
 
-        User user = new User();
-        user.setUserName(userName);
-        user.setDeposit(deposit.getValue());
+    User user = new User();
+    user.setUserName(userName);
+    user.setDeposit(deposit.getValue());
 
-        when(userRepository.deposit(userName, deposit)).thenReturn(user);
+    when(userRepository.deposit(userName, deposit)).thenReturn(user);
 
-        assertEquals(user, userService.deposit(userName, new Deposit(deposit.getValue())));
-        verify(userRepository).deposit(userName, deposit);
-    }
+    assertEquals(user, userService.deposit(userName, new Deposit(deposit.getValue())));
+    verify(userRepository).deposit(userName, deposit);
+  }
 
-    @Test
-    public void shouldNotDeposit() throws CoinInputException {
-        String userName = "userName";
-        AcceptedCoins deposit = AcceptedCoins.FIVE;
+  @Test
+  public void shouldNotDeposit() throws CoinInputException {
+    String userName = "userName";
+    AcceptedCoins deposit = AcceptedCoins.FIVE;
 
-        User user = new User();
-        user.setUserName(userName);
-        user.setDeposit(deposit.getValue());
+    User user = new User();
+    user.setUserName(userName);
+    user.setDeposit(deposit.getValue());
 
-        when(userRepository.deposit(userName, deposit)).thenThrow(new CoinInputException());
+    when(userRepository.deposit(userName, deposit)).thenThrow(new CoinInputException());
 
-        assertThrows(CoinInputException.class, () -> userService.deposit(userName, new Deposit(deposit.getValue())));
+    assertThrows(
+        CoinInputException.class,
+        () -> userService.deposit(userName, new Deposit(deposit.getValue())));
 
-        verify(userRepository).deposit(userName, deposit);
-    }
+    verify(userRepository).deposit(userName, deposit);
+  }
 
-    @Test
-    public void shouldResetDeposit() {
-        String userName = "userName";
+  @Test
+  public void shouldResetDeposit() {
+    String userName = "userName";
 
-        User user = new User();
-        user.setUserName(userName);
-        user.setDeposit(0);
+    User user = new User();
+    user.setUserName(userName);
+    user.setDeposit(0);
 
-        when(userRepository.resetDeposit(userName)).thenReturn(user);
+    when(userRepository.resetDeposit(userName)).thenReturn(user);
 
-        assertEquals(user, userService.resetDeposit(userName));
-        verify(userRepository).resetDeposit(userName);
-    }
+    assertEquals(user, userService.resetDeposit(userName));
+    verify(userRepository).resetDeposit(userName);
+  }
 }
