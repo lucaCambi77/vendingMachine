@@ -6,6 +6,7 @@ import com.mvp.challenge.domain.user.User;
 import com.mvp.challenge.exception.CoinInputException;
 import com.mvp.challenge.exception.UserCredentialException;
 import com.mvp.challenge.service.UserService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

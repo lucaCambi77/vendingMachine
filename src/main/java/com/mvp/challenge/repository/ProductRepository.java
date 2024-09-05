@@ -47,7 +47,7 @@ public class ProductRepository {
   public List<Product> getBySeller(int seller) {
     return productMap.values().stream()
         .filter(product -> product.getSellerId().equals(seller))
-        .collect(Collectors.toList());
+        .toList();
   }
 
   public Product delete(Product product) {

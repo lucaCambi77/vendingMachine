@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+import com.mvp.challenge.domain.AcceptedCoins;
 import com.mvp.challenge.domain.Product;
 import com.mvp.challenge.domain.Purchase;
 import com.mvp.challenge.domain.PurchaseResult;
@@ -15,8 +16,10 @@ import com.mvp.challenge.exception.TooManyProductPurchaseException;
 import com.mvp.challenge.exception.UserCredentialException;
 import com.mvp.challenge.repository.ProductRepository;
 import com.mvp.challenge.repository.UserRepository;
-import com.mvp.challenge.service.impl.PurchaseServiceImpl;
+
 import java.util.List;
+import java.util.Map;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,7 +50,7 @@ public class PurchaseServiceTest {
 
   @BeforeEach
   public void setUp() {
-    purchaseService = new PurchaseServiceImpl(productRepository, userRepository);
+    purchaseService = new PurchaseService(productRepository, userRepository);
   }
 
   @Test
@@ -76,6 +79,36 @@ public class PurchaseServiceTest {
                     .build()));
 
     assertEquals(product.getCost() * purchaseAmount, purchaseResult.getTotal());
+    assertEquals(Map.of(), purchaseResult.getChange());
+  }
+
+  @Test
+  public void shouldBuyProductWithCorrectChange()
+      throws NotEnoughDepositException,
+          ProductTemporarilyNotAvailable,
+          UserCredentialException,
+          ProductNotExistsException,
+          TooManyProductPurchaseException {
+
+    when(productRepository.getByProduct(product.getProductName())).thenReturn(product);
+    String userName = "userName";
+
+    int purchaseAmount = 1;
+
+    when(userRepository.get(userName))
+        .thenReturn(User.builder().deposit(productCost * purchaseAmount + 10).build());
+
+    PurchaseResult purchaseResult =
+        purchaseService.buy(
+            userName,
+            List.of(
+                Purchase.builder()
+                    .productId(product.getProductName())
+                    .amount(purchaseAmount)
+                    .build()));
+
+    assertEquals(product.getCost() * purchaseAmount, purchaseResult.getTotal());
+    assertEquals(Map.of(AcceptedCoins.TEN, 1), purchaseResult.getChange());
   }
 
   @Test

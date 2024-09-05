@@ -9,7 +9,7 @@ import com.mvp.challenge.exception.CoinInputException;
 import com.mvp.challenge.exception.ProductAlreadyExistsException;
 import com.mvp.challenge.exception.ProductNotExistsException;
 import com.mvp.challenge.repository.ProductRepository;
-import com.mvp.challenge.service.impl.ProductServiceImpl;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,7 +39,7 @@ public class ProductServiceTest {
 
   @BeforeEach
   public void setUp() {
-    productService = new ProductServiceImpl(productRepository);
+    productService = new ProductService(productRepository);
   }
 
   @Test

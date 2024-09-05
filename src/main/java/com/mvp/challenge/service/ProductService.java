@@ -3,13 +3,25 @@ package com.mvp.challenge.service;
 import com.mvp.challenge.domain.Product;
 import com.mvp.challenge.exception.CoinInputException;
 import com.mvp.challenge.exception.ProductAlreadyExistsException;
-import com.mvp.challenge.exception.ProductNotExistsException;
+import com.mvp.challenge.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-public interface ProductService {
+@RequiredArgsConstructor
+@Service
+public class ProductService {
 
-    Product add(Product product) throws ProductAlreadyExistsException, CoinInputException;
+  private final ProductRepository productRepository;
 
-    Product delete(Product product);
+  public Product add(Product product) throws ProductAlreadyExistsException, CoinInputException {
+    return productRepository.add(product);
+  }
 
-    Product updateProduct(Product productUpdate) throws ProductNotExistsException;
+  public Product delete(Product product) {
+    return productRepository.delete(product);
+  }
+
+  public Product updateProduct(Product productUpdate) {
+    return productRepository.updateProduct(productUpdate);
+  }
 }
