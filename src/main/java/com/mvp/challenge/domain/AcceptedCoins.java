@@ -9,7 +9,7 @@ public enum AcceptedCoins {
     FIFTY(50),
     HUNDRED(100);
 
-    int value;
+    final int value;
 
     AcceptedCoins(int value) {
         this.value = value;

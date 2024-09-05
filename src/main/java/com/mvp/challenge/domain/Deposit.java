@@ -1,6 +1,5 @@
 package com.mvp.challenge.domain;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,5 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Deposit {
-    private int value;
+  private int value;
 }

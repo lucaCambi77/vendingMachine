@@ -1,5 +1,8 @@
 package com.mvp.challenge.repository;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.mvp.challenge.domain.AcceptedCoins;
 import com.mvp.challenge.domain.MvpRoles;
 import com.mvp.challenge.domain.user.Role;
@@ -7,15 +10,11 @@ import com.mvp.challenge.domain.user.User;
 import com.mvp.challenge.domain.user.UserRole;
 import com.mvp.challenge.exception.CoinInputException;
 import com.mvp.challenge.exception.UserCredentialException;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class UserRepositoryTest {
@@ -33,11 +32,11 @@ class UserRepositoryTest {
   @Test
   public void shouldNotAddUser() {
     User user = new User();
-    user.setUserName("newUser");
+    user.setUsername("newUser");
 
     assertThrows(UserCredentialException.class, () -> userRepository.mergeUser(user));
 
-    user.setUserName(null);
+    user.setUsername(null);
     user.setPassword("password");
 
     assertThrows(UserCredentialException.class, () -> userRepository.mergeUser(user));
@@ -91,7 +90,7 @@ class UserRepositoryTest {
 
   private User createUser() {
     return User.builder()
-        .userName(USER_NAME)
+        .username(USER_NAME)
         .password("password")
         .userRoles(
             Set.of(

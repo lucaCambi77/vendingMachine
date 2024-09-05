@@ -5,17 +5,9 @@ import com.mvp.challenge.exception.CoinInputException;
 import com.mvp.challenge.exception.ProductAlreadyExistsException;
 import com.mvp.challenge.exception.ProductNotExistsException;
 
-import java.util.List;
-
 public interface ProductService {
 
     Product add(Product product) throws ProductAlreadyExistsException, CoinInputException;
-
-    List<Product> getAll();
-
-    Product getByProduct(String product) throws ProductNotExistsException;
-
-    List<Product> getBySeller(int seller);
 
     Product delete(Product product);
 

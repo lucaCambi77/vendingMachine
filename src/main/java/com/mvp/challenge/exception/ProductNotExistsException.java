@@ -2,7 +2,7 @@ package com.mvp.challenge.exception;
 
 public class ProductNotExistsException extends Exception {
 
-    public ProductNotExistsException(String productName) {
-        super(productName + " do not exists");
-    }
+  public ProductNotExistsException(String productName) {
+    super(productName + " do not exists");
+  }
 }

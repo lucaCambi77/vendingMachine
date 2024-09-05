@@ -1,11 +1,14 @@
 package com.mvp.challenge.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+
 import com.mvp.challenge.domain.Product;
 import com.mvp.challenge.exception.CoinInputException;
 import com.mvp.challenge.exception.ProductAlreadyExistsException;
 import com.mvp.challenge.exception.ProductNotExistsException;
 import com.mvp.challenge.repository.ProductRepository;
-import com.mvp.challenge.repository.UserRepository;
 import com.mvp.challenge.service.impl.ProductServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,16 +16,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceTest {
 
   @Mock private ProductRepository productRepository;
-
-  @Mock private UserRepository userRepository;
 
   private ProductService productService;
 
@@ -42,7 +39,7 @@ public class ProductServiceTest {
 
   @BeforeEach
   public void setUp() {
-    productService = new ProductServiceImpl(productRepository, userRepository);
+    productService = new ProductServiceImpl(productRepository);
   }
 
   @Test

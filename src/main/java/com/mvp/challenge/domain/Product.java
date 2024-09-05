@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @EqualsAndHashCode(of = {"productName", "sellerId"})
 public class Product {
-    private Integer amountAvailable;
-    private Integer cost;
-    private String productName;
-    private Integer sellerId;
+  private Integer amountAvailable;
+  private Integer cost;
+  private String productName;
+  private Integer sellerId;
 }

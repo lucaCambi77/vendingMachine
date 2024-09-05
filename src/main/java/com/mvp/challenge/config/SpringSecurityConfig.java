@@ -1,57 +1,57 @@
-/**
- *
- */
+/** */
 package com.mvp.challenge.config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * @author luca
- *
  */
 @Configuration
 @EnableWebSecurity
-@Import({MethodSecurityConfig.class})
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 @RequiredArgsConstructor
-public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+public class SpringSecurityConfig {
 
-    private final UserDetailsService userDetailsService;
+  private final UserDetailsService userDetailsService;
 
-    @Bean
-    public AuthenticationManager customAuthenticationManager() throws Exception {
-        return authenticationManager();
-    }
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http.authorizeHttpRequests(
+            authorizeRequests ->
+                authorizeRequests
+                    .requestMatchers("/user")
+                    .permitAll() // Allow unauthenticated access to user creation
+                    .anyRequest()
+                    .authenticated())
+        .httpBasic(Customizer.withDefaults())
+        .csrf(AbstractHttpConfigurer::disable)
+        .authenticationProvider(authenticationProvider());
 
-    @Override
-    protected void configure(@Autowired AuthenticationManagerBuilder auth) throws Exception {
+    return http.build();
+  }
 
-        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
-    }
+  @Bean
+  public AuthenticationProvider authenticationProvider() {
+    var authenticationProvider = new DaoAuthenticationProvider();
+    authenticationProvider.setUserDetailsService(userDetailsService);
+    authenticationProvider.setPasswordEncoder(passwordEncoder());
+    return authenticationProvider;
+  }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .authorizeRequests()
-                .and().httpBasic()
-                .and().authorizeRequests().antMatchers("/api/login/**").anonymous()
-                .and().authorizeRequests().anyRequest().permitAll()
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-    }
-
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  public BCryptPasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 }

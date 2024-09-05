@@ -1,6 +1,5 @@
 package com.mvp.challenge.domain;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Purchase {
 
-    private String productId;
-    private int amount;
+  private String productId;
+  private int amount;
 }

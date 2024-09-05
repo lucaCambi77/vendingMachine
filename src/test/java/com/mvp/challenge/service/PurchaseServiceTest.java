@@ -1,5 +1,9 @@
 package com.mvp.challenge.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
 import com.mvp.challenge.domain.Product;
 import com.mvp.challenge.domain.Purchase;
 import com.mvp.challenge.domain.PurchaseResult;
@@ -12,17 +16,12 @@ import com.mvp.challenge.exception.UserCredentialException;
 import com.mvp.challenge.repository.ProductRepository;
 import com.mvp.challenge.repository.UserRepository;
 import com.mvp.challenge.service.impl.PurchaseServiceImpl;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class PurchaseServiceTest {
@@ -53,8 +52,11 @@ public class PurchaseServiceTest {
 
   @Test
   public void shouldBuyProduct()
-      throws NotEnoughDepositException, ProductTemporarilyNotAvailable, UserCredentialException,
-          ProductNotExistsException, TooManyProductPurchaseException {
+      throws NotEnoughDepositException,
+          ProductTemporarilyNotAvailable,
+          UserCredentialException,
+          ProductNotExistsException,
+          TooManyProductPurchaseException {
 
     when(productRepository.getByProduct(product.getProductName())).thenReturn(product);
     String userName = "userName";

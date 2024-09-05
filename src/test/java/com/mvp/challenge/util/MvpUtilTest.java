@@ -1,11 +1,10 @@
 package com.mvp.challenge.util;
 
-import com.mvp.challenge.domain.AcceptedCoins;
-import org.junit.jupiter.api.Test;
-
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import com.mvp.challenge.domain.AcceptedCoins;
+import java.util.Map;
+import org.junit.jupiter.api.Test;
 
 public class MvpUtilTest {
 

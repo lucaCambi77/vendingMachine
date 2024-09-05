@@ -1,57 +1,50 @@
 package com.mvp.challenge.domain.user;
 
-
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Set;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
 public class User implements java.io.Serializable, UserDetails {
-    private String userName;
-    private String password;
-    private int deposit;
-    private Set<UserRole> userRoles;
-    private boolean active;
+  private String username;
+  private String password;
+  private int deposit;
+  private Set<UserRole> userRoles;
+  private boolean active;
 
-    @Override
-    public Set<UserRole> getAuthorities() {
-        return this.userRoles;
-    }
+  @Override
+  public Set<UserRole> getAuthorities() {
+    return this.userRoles;
+  }
 
-    @Override
-    public String getUsername() {
-        return this.userName;
-    }
+  @Override
+  public String getUsername() {
+    return this.username;
+  }
 
-    public String getUserName() {
-        return this.userName;
-    }
+  @Override
+  public boolean isAccountNonExpired() {
+    return false;
+  }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
+  @Override
+  public boolean isAccountNonLocked() {
+    return false;
+  }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return false;
+  }
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return this.active;
-    }
+  @Override
+  public boolean isEnabled() {
+    return this.active;
+  }
 }
-

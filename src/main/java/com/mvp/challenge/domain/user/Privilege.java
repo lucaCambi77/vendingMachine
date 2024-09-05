@@ -1,6 +1,5 @@
 package com.mvp.challenge.domain.user;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,5 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class Privilege {
-    private String privilege;
+  private String privilege;
 }

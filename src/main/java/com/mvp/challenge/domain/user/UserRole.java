@@ -12,11 +12,10 @@ import org.springframework.security.core.GrantedAuthority;
 @Builder
 public class UserRole implements java.io.Serializable, GrantedAuthority {
 
-    private Role role;
+  private Role role;
 
-    @Override
-    public String getAuthority() {
-        return role.getName();
-    }
+  @Override
+  public String getAuthority() {
+    return role.getName();
+  }
 }
-

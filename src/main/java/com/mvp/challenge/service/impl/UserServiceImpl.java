@@ -1,6 +1,4 @@
-/**
- *
- */
+/** */
 package com.mvp.challenge.service.impl;
 
 import com.mvp.challenge.domain.AcceptedCoins;
@@ -19,34 +17,33 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+  private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Override
-    public User save(User user) throws UserCredentialException {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setActive(true);
-        return userRepository.mergeUser(user);
-    }
+  @Override
+  public User save(User user) throws UserCredentialException {
+    user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+    user.setActive(true);
+    return userRepository.mergeUser(user);
+  }
 
-    @Override
-    public User findByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.get(username);
-    }
+  @Override
+  public User findByUsername(String username) throws UsernameNotFoundException {
+    return userRepository.get(username);
+  }
 
-    @Override
-    public User deposit(String userName, Deposit deposit) throws CoinInputException {
+  @Override
+  public User deposit(String userName, Deposit deposit) throws CoinInputException {
+    return userRepository.deposit(userName, getDepositValue(deposit));
+  }
 
-        return userRepository.deposit(userName, getDepositValue(deposit));
-    }
+  @Override
+  public User resetDeposit(String userName) {
+    return userRepository.resetDeposit(userName);
+  }
 
-    @Override
-    public User resetDeposit(String userName) {
-        return userRepository.resetDeposit(userName);
-    }
-
-    private AcceptedCoins getDepositValue(Deposit deposit) {
-        return AcceptedCoins.getByValue(deposit.getValue());
-    }
+  private AcceptedCoins getDepositValue(Deposit deposit) {
+    return AcceptedCoins.getByValue(deposit.getValue());
+  }
 }

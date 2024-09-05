@@ -1,5 +1,10 @@
 package com.mvp.challenge.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.mvp.challenge.domain.AcceptedCoins;
 import com.mvp.challenge.domain.Deposit;
 import com.mvp.challenge.domain.user.User;
@@ -14,11 +19,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -37,7 +37,7 @@ class UserServiceTest {
   @Test
   public void shouldAddUser() throws UserCredentialException {
     User user = new User();
-    user.setUserName("User");
+    user.setUsername("User");
     user.setPassword("password");
 
     userService.save(user);
@@ -62,7 +62,7 @@ class UserServiceTest {
     String userName = "userName";
 
     User user = new User();
-    user.setUserName(userName);
+    user.setUsername(userName);
     user.setPassword("password");
 
     when(userRepository.get(userName)).thenReturn(user);
@@ -89,7 +89,7 @@ class UserServiceTest {
     AcceptedCoins deposit = AcceptedCoins.FIVE;
 
     User user = new User();
-    user.setUserName(userName);
+    user.setUsername(userName);
     user.setDeposit(deposit.getValue());
 
     when(userRepository.deposit(userName, deposit)).thenReturn(user);
@@ -104,7 +104,7 @@ class UserServiceTest {
     AcceptedCoins deposit = AcceptedCoins.FIVE;
 
     User user = new User();
-    user.setUserName(userName);
+    user.setUsername(userName);
     user.setDeposit(deposit.getValue());
 
     when(userRepository.deposit(userName, deposit)).thenThrow(new CoinInputException());
@@ -121,7 +121,7 @@ class UserServiceTest {
     String userName = "userName";
 
     User user = new User();
-    user.setUserName(userName);
+    user.setUsername(userName);
     user.setDeposit(0);
 
     when(userRepository.resetDeposit(userName)).thenReturn(user);

@@ -1,5 +1,8 @@
 package com.mvp.challenge.repository;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.mvp.challenge.domain.Product;
 import com.mvp.challenge.domain.Purchase;
 import com.mvp.challenge.exception.CoinInputException;
@@ -12,9 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class ProductRepositoryTest {
@@ -197,8 +197,11 @@ class ProductRepositoryTest {
 
   @Test
   public void shouldBuyProduct()
-      throws CoinInputException, ProductAlreadyExistsException, ProductTemporarilyNotAvailable,
-          ProductNotExistsException, TooManyProductPurchaseException {
+      throws CoinInputException,
+          ProductAlreadyExistsException,
+          ProductTemporarilyNotAvailable,
+          ProductNotExistsException,
+          TooManyProductPurchaseException {
     int available = 5;
     int purchase = 1;
 
